@@ -2,10 +2,10 @@
 #define IN2 19  // Motor A Reverse
 #define IN3 21  // Motor B Forward
 #define IN4 22  // Motor B Reverse
-#define IN5 18  // Motor C Forward
-#define IN6 19  // Motor C Reverse
-#define IN7 21  // Motor D Forward
-#define IN8 22  // Motor D Reverse
+#define IN5 34  // Motor C Forward
+#define IN6 35  // Motor C Reverse
+#define IN7 32  // Motor D Forward
+#define IN8 33  // Motor D Reverse
 #define ENA 5   // PWM for Motor A
 #define ENB 15  // PWM for Motor B
 #define ENC 25  // PWM for Motor C
