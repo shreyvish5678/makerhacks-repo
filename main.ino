@@ -212,27 +212,28 @@ Servo myServo1;
 Servo myServo2;
 
 void changeAngle(int initialAngle, int angle, int servoOrNot) {
-    Servo* selectedServo = nullptr; // Pointer to the chosen servo
+    Servo selectedServo = nullptr; // Pointer to the chosen servo
 
     // Select servo based on servoOrNot value
     if (servoOrNot == 1) {
-        selectedServo = &myServo1;
+        selectedServo = myServo1;
     } else if (servoOrNot == 2) {
-        selectedServo = &myServo2;
+        selectedServo = myServo2;
     } else {
         return; // Invalid servo number, exit function
     }
 
     // Adjust the servo angle
     if (initialAngle < angle) {
-        for (int i = initialAngle; i <= angle; i++) {
-            selectedServo->write(i);
-            delay(15); // Small delay for smooth movement
+        for (int i = initialAngle; i <= angle; i+= 20) {
+            selectedServo.write(i);
+            delay(20); // Small delay for smooth movement
         }
     } else {
-        for (int i = initialAngle; i >= angle; i--) {
-            selectedServo->write(i);
-            delay(15);
+        for (int i = initialAngle; i >= angle; i-= 20) 
+        {
+            selectedServo.write(i);
+            delay(20);
         }
     }
 }
