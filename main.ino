@@ -8,6 +8,7 @@ const char* PASSWORD = "thisisArnav";
 
 Servo myServo1; //Servo 1
 Servo myServo2; //Servo 2
+Servo myServo3; //Servo 3
 
 WebSocketsServer webSocket(81);
 
@@ -20,19 +21,20 @@ WebSocketsServer webSocket(81);
 #define IN4 26  // Motor B Reverse
 #define ENB 14  // PWM for Motor B
 
-#define IN5 18  // Motor C Forward
-#define IN6 19  // Motor C Reverse
-#define ENC 23  // PWM for Motor C
+#define IN5 21  // Motor C Forward
+#define IN6 22  // Motor C Reverse
+#define ENC 5  // PWM for Motor C
 
-#define IN7 21  // Motor D Forward
-#define IN8 22  // Motor D Reverse
-#define END 5  // PWM for Motor D
+#define IN7 18  // Motor D Forward
+#define IN8 19  // Motor D Reverse
+#define END 23  // PWM for Motor D
 
 #define S1 12 //Servo 1
 #define S2 13 //Servo 2
+#define S3 35
 #define OFFSET 40 //Offset
 
-#define SPEED 255
+#define SPEED 200
 
 void setup() {
     Serial.begin(115200);
@@ -66,8 +68,10 @@ void setup() {
 
     myServo1.attach(S1);
     myServo2.attach(S2);
+    myServo3.attach(S3);
     myServo1.write(0);
     myServo2.write(0);
+    myServo3.write(90);
 }
 
 void loop() {
@@ -94,7 +98,9 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
             } else if (message == "keydown:2") {
                 pos2();
             } else if (message == "keydown:3") {
-                pos3();
+                pos3();                                                                                                        
+            } else if (message == "keydown:4") {
+                auton();
             } else {
                 stopAllMotors();
             }
@@ -118,11 +124,11 @@ void moveBackward() {
 }
 
 void turnLeft() {
-    rotateLeft(SPEED);
+    rotateLeft(180);
 }
 
 void turnRight() {
-    rotateRight(SPEED);
+    rotateRight(180);
 }
 
 void stopAllMotors() {
@@ -155,9 +161,15 @@ void driveBackward(int pin1, int pin2) {
 }
 
 void driveAllForward(int speed) {
-    setMotorSpeed(speed);
+    //setMotorSpeed(speed);
+    analogWrite(ENA, speed);
+    analogWrite(ENB, speed);
+    analogWrite(ENC, speed);    
+    analogWrite(END, speed);
+
     driveForward(IN1, IN2); 
     driveForward(IN3, IN4);
+    //setMotorSpeed(speed/2);
     driveForward(IN5, IN6);
     driveForward(IN7, IN8);
 }
@@ -189,7 +201,7 @@ void rotateLeft(int speed) {
 void pos1() {
     myServo1.write(180);
     delay(500);
-    myServo2.write(180);
+    myServo2.write(0);
     delay(500);
 }
 
@@ -200,34 +212,38 @@ void pos2() {
     delay(500);
 }
 
+void auton() {
+    moveForward();
+    delay(1300);
+    stopAllMotors();
+    turnLeft();
+    delay(10);
+    moveForward();
+    delay(1500);
+}
+
 void pos3() {
     myServo1.write(0);
     delay(500);
-    myServo2.write(180);
+    myServo2.write(0);
     delay(500);
 }
-#include <Servo.h>
-
-Servo myServo1;
-Servo myServo2;
 
 void changeAngle(int initialAngle, int angle, int servoOrNot) {
     Servo selectedServo;
 
-    // Select servo based on servoOrNot value
     if (servoOrNot == 1) {
         selectedServo = myServo1;
     } else if (servoOrNot == 2) {
         selectedServo = myServo2;
     } else {
-        return; // Invalid servo number, exit function
+        return; 
     }
 
-    // Adjust the servo angle
     if (initialAngle < angle) {
         for (int i = initialAngle; i <= angle; i+= 10) {
             selectedServo.write(i);
-            delay(10); // Small delay for smooth movement
+            delay(10); 
         }
     } else {
         for (int i = initialAngle; i >= angle; i-= 10) 
