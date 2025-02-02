@@ -225,15 +225,15 @@ void changeAngle(int initialAngle, int angle, int servoOrNot) {
 
     // Adjust the servo angle
     if (initialAngle < angle) {
-        for (int i = initialAngle; i <= angle; i+= 20) {
+        for (int i = initialAngle; i <= angle; i+= 10) {
             selectedServo.write(i);
-            delay(20); // Small delay for smooth movement
+            delay(10); // Small delay for smooth movement
         }
     } else {
-        for (int i = initialAngle; i >= angle; i-= 20) 
+        for (int i = initialAngle; i >= angle; i-= 10) 
         {
             selectedServo.write(i);
-            delay(20);
+            delay(10);
         }
     }
 }
