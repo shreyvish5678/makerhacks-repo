@@ -212,7 +212,7 @@ Servo myServo1;
 Servo myServo2;
 
 void changeAngle(int initialAngle, int angle, int servoOrNot) {
-    Servo selectedServo = nullptr; // Pointer to the chosen servo
+    Servo selectedServo;
 
     // Select servo based on servoOrNot value
     if (servoOrNot == 1) {
