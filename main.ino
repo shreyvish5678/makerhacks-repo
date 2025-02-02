@@ -1,9 +1,13 @@
 #include <WiFi.h>
 #include <WebSocketsServer.h>
+#include <ESP32Servo.h>
 
 // WiFi credentials
 const char* SSID = "arnav";
 const char* PASSWORD = "thisisArnav";
+
+Servo myServo1; //Servo 1
+Servo myServo2; //Servo 2
 
 WebSocketsServer webSocket(81);
 
@@ -23,6 +27,10 @@ WebSocketsServer webSocket(81);
 #define IN7 21  // Motor D Forward
 #define IN8 22  // Motor D Reverse
 #define END 5  // PWM for Motor D
+
+#define S1 12 //Servo 1
+#define S2 13 //Servo 2
+#define OFFSET 40 //Offset
 
 #define SPEED 255
 
@@ -55,6 +63,11 @@ void setup() {
     pinMode(IN8, OUTPUT);
     pinMode(ENC, OUTPUT);
     pinMode(END, OUTPUT);
+
+    myServo1.attach(S1);
+    myServo2.attach(S2);
+    myServo1.write(0);
+    myServo2.write(0);
 }
 
 void loop() {
@@ -76,6 +89,12 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t* payload, size_t length)
                 turnLeft();
             } else if (message == "keydown:ArrowRight") {
                 turnRight();
+            } else if (message == "keydown:1") {
+                pos1();
+            } else if (message == "keydown:2") {
+                pos2();
+            } else if (message == "keydown:3") {
+                pos3();
             } else {
                 stopAllMotors();
             }
@@ -165,4 +184,25 @@ void rotateLeft(int speed) {
     driveForward(IN3, IN4);
     driveBackward(IN5, IN6);
     driveForward(IN7, IN8);
+}
+
+void pos1() {
+    myServo1.write(180);
+    delay(500);
+    myServo2.write(180);
+    delay(500);
+}
+
+void pos2() {
+    myServo1.write(OFFSET * 2);
+    delay(500);
+    myServo2.write(180 - OFFSET * 2);
+    delay(500);
+}
+
+void pos3() {
+    myServo1.write(0);
+    delay(500);
+    myServo2.write(180);
+    delay(500);
 }
